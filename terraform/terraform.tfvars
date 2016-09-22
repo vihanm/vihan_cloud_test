@@ -1,0 +1,5 @@
+default_keypair_public_key = "template/kubernetes.pem"
+control_cidr = "123.45.67.89/32"
+vpc_name = "VihanTest ETCD"
+elb_name = "vihantest-etcd"
+owner = "VihanTest"

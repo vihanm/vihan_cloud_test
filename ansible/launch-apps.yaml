@@ -1,0 +1,39 @@
+---
+
+#######################################
+# Deploy docker and expose Nginx service
+#######################################
+
+# Expects kubectl being configured on the local machine
+# using kubectl.yaml playbook
+
+
+- hosts: localhost
+  connection: local
+
+  tasks:
+  
+## USE KUBERNETES CONTAINER 
+
+  - name: Launch nginx pods
+    command: "kubectl run nginx --image=nginx --port=80 --replicas=3"
+
+  - name: Expose nginx
+    command: "kubectl expose deployment nginx --type NodePort"
+
+  - name: Get exposed port
+    command: "kubectl get svc nginx --output=jsonpath='{range .spec.ports[0]}{.nodePort}'"
+    register: result
+  - set_fact:
+      node_port: "{{ result.stdout }}"
+
+  - debug: msg="Exposed port {{ node_port }}"
+
+  ## OR CAN USE DOCKER CONTAINER 
+  ## 
+  ##   - name: Install docker
+  ##   command: "curl -sSL https://get.docker.com/ubuntu/ | sudo sh"
+  ##
+  ##   - name: Run nginx as a docker process
+  ##   command: "docker run -d -p 80:80 dockerfile/nginx"
+  
